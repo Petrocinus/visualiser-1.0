@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+	<style>
+		
+
+body{
+    margin: 0%;
+    background: #0f0f11;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* overflow: hidden; */
+}
+.logo{
+    margin: 2px;
+    border-radius: 30px;
+}
+h1{
+    color: whitesmoke;
+    cursor: pointer;
+    font-style: italic;
+}
+	</style>
+</head>
+<body>
+<h1>click 2 times</h1>
+    <div id="logotip"></div>
+	<audio src="https://myradio24.org/trollbro5" id="audio"></audio>
+    <!-- <script src="script.js"></script> -->
+	<script>
+		var audio, context, analyser,myElements, src, array, logo, num, array, body, width, height;
+
+body = document.querySelector('body');
+
+num = 32;
+
+width = 10;
+
+array = new Uint8Array(num*2);
+
+audio = document.getElementById("audio");
+
+window.onclick = function(){
+    if(!context){
+        preparation();
+    }
+    if(audio.paused){
+        audio.play();
+        loop();
+    }else{
+        audio.pause();
+    }
+}
+
+function preparation(){
+    body.querySelector('h1').remove();
+    context = new AudioContext();
+    analyser = context.createAnalyser();
+    src = context.createMediaStreamSource(stream);
+    src.connect(analyser);
+    analyser.connect(context.destination);
+    for(var i = 0 ; i < num ; i++){
+        logo = document.createElement('div');
+        logo.className = 'logo';
+        logo.style.background = 'red';
+        logo.style.minWidth = width+'px';
+        body = document.querySelector('body');
+        body.appendChild(logo);
+    }
+    
+    loop();
+}
+
+
+function loop() {
+    window.requestAnimationFrame(loop);
+    analyser.getByteFrequencyData(array);
+    for(var i = 0 ; i < num ; i++){
+        height = array[i+num];
+        myElements[i].style.minHeight = height+'px';
+        myElements[i].style.opacity = 0.008*height;
+    }
+}
+	</script>
+</body>
+</html>
